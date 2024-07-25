@@ -96,9 +96,13 @@ class BOE(): # Blur Orientation Estimator
         self.c = 0
     
     def infernece(self):
+        pbar = tqdm(self.list_of_filelist, total=len(self.list_of_filelist))
+        pbar.set_description(f'Generating Blur Orientation')
         for filelist in self.list_of_filelist:
             self.c+=1
             self.generate(filelist)
+            pbar.update(1)
+        pbar.close() 
 
     def generate(self, frames_file_list):
         magnitude_max=torch.tensor([0]).cuda()
@@ -108,8 +112,6 @@ class BOE(): # Blur Orientation Estimator
         flow_viz_path =  flow_video_path.replace('test','viz')
         os.makedirs(flow_viz_path, exist_ok=True)
         with torch.no_grad():
-            pbar = tqdm(frames_file_list, total=len(frames_file_list))
-            pbar.set_description(f'Generating Blur Orientation {self.c}/{len(self.list_of_filelist)}')
             for idx in range(1,len(frames_file_list)-1):
                 # print("complete: ",idx)
                 flow0 = 0
@@ -163,9 +165,7 @@ class BOE(): # Blur Orientation Estimator
                     magnitude_max=np.max(magnitude)
 
                         #viz(blurry_image, temp)
-                pbar.update(1)
-        pbar.close() 
-        print("magnitude_max", magnitude_max)
+        # print("magnitude_max", magnitude_max)
 
     def load_image(self, imfile, device='cuda'):
         img = np.array(Image.open(imfile)).astype(np.uint8)
@@ -183,13 +183,60 @@ class BOE(): # Blur Orientation Estimator
         flo = flow_viz.flow_to_image(optical_flow)
         flo = flo[:, :, [2,1,0]]
         cv2.imwrite(save_path, flo)
-    
+
+class DBCGM(): # Domain-adaptive Blur Condition Generation Module
+    def __init__(self, args):
+        self.args = args
+        self.magnitude_folder = self.args.bme_output_path
+        self.orientation_folder = self.args.boe_output_path
+        self.output_folder = self.args.dbcgm_output_path
+        self.video_list = sorted(os.listdir(self.orientation_folder))
+
+    def generate_dbc(self):
+        pbar = tqdm(self.video_list, total=len(self.video_list))
+        pbar.set_description(f'Generating Domain-adaptive Blur Condition')
+        for video in self.video_list:
+            file_list = sorted(os.listdir(os.path.join(self.orientation_folder, video)))
+            outptu_video_path = os.path.join(self.output_folder, video)
+            os.makedirs(outptu_video_path, exist_ok=True)
+            for i in range(len(file_list)):
+                # Orientation
+                file = file_list[i]
+                file_path = os.path.join(self.orientation_folder, video, file)
+                blur_condition = np.load(file_path)
+
+                # Magnitude
+                cur_blur_mag_path = os.path.join(self.magnitude_folder, video, file)
+                cur_blur_mag = np.load(cur_blur_mag_path)
+
+                if(i>=2)&(i<(len(file_list)-2)):
+                    # neighbors blur mask
+                    t_minus2_path = os.path.join(self.magnitude_folder,video, file_list[i-2])
+                    t_minus2_mask = np.load(t_minus2_path)
+                    t_minus1_path = os.path.join(self.magnitude_folder,video, file_list[i-1])
+                    t_minus1_mask = np.load(t_minus1_path)
+                    t_plus2_path = os.path.join(self.magnitude_folder,video, file_list[i+2])
+                    t_plus2_mask = np.load(t_plus2_path)
+                    t_plus1_path = os.path.join(self.magnitude_folder,video, file_list[i+1])
+                    t_plus1_mask = np.load(t_plus1_path)
+                    neighbor_avg_magnitude = (t_minus2_mask + t_minus1_mask + t_plus2_mask + t_plus1_mask)/4
+                    cur_blur_mag = cur_blur_mag / np.max(cur_blur_mag)
+                    new_blur_magnitude = cur_blur_mag*neighbor_avg_magnitude
+                    blur_condition[2] = new_blur_magnitude + 5
+                else:
+                    blur_condition[2] = cur_blur_mag.copy() + 5
+
+                output_file_path = os.path.join(outptu_video_path, file)
+                np.save(output_file_path, blur_condition)
+            pbar.update(1)
+        pbar.close() 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # argument for BME
     parser.add_argument("--bme_weight_path", default="home/jthe/BME/BME/weights/best_net.pth", type=str)
     parser.add_argument("--infer_dataset_path", default="4TB/jthe/datasets/BSD_2ms16ms/test", type=str)
-    parser.add_argument("--bme_output_path", default="home/jthe/DADeblur/DBCGM/BME/output/BSD_2ms16ms/", type=str)
+    parser.add_argument("--bme_output_path", default="home/jthe/DADeblur/DBCGM/BME/output/BSD_2ms16ms/test", type=str)
     # argument for BOE
     parser.add_argument("--boe_weight_path", default="home/jthe/Deblur_Domain_Adaptation/data_generator/blur_orientation_estimator/weights/raft-things.pth", type=str)
     parser.add_argument("--boe_output_path", default="home/jthe/DADeblur/DBCGM/BOE/output/BSD_2ms16ms/test", type=str)
@@ -197,6 +244,8 @@ if __name__ == "__main__":
     parser.add_argument('--small', action='store_true', help='use small model')
     parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
+    # argument for DBCGM
+    parser.add_argument("--dbcgm_output_path", default="home/jthe/DADeblur/DBCGM/output/BSD_2ms16ms/test", type=str)
     args = parser.parse_args()
 
     # blur magnitude estimation
@@ -204,5 +253,9 @@ if __name__ == "__main__":
     # bme.inference()
 
     # blur orientation estimation
-    boe = BOE(args)
-    boe.infernece()
+    # boe = BOE(args)
+    # boe.infernece()
+
+    # domain-adaptive blur condition generation
+    dbcgm = DBCGM(args)
+    dbcgm.generate_dbc()
