@@ -1,0 +1,6 @@
+log/
+weights/
+output/
+json/
+mask/
+*.png
