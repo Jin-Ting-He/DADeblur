@@ -249,12 +249,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # blur magnitude estimation
-    # bme = BME(args)
-    # bme.inference()
+    bme = BME(args)
+    bme.inference()
 
     # blur orientation estimation
-    # boe = BOE(args)
-    # boe.infernece()
+    boe = BOE(args)
+    boe.infernece()
 
     # domain-adaptive blur condition generation
     dbcgm = DBCGM(args)
