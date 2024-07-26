@@ -3,4 +3,5 @@ weights/
 output/
 json/
 mask/
+blurring_output/
 *.png
