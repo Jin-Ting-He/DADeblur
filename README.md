@@ -27,13 +27,39 @@ We test the following real-world dataset to validate our test-time adaptation me
 ### Model weights
 Before doing test-time adaptation for video deblurring model, you need to prepare the model weights for ID-Blau and BME. You can follow [ID-Blau](https://github.com/plusgood-steven/ID-Blau) and [BME](https://github.com/Jin-Ting-He/BME) to train your own model weight or download our pretrained weights. For each video deblurring model, you can download their pretrained weight(GoPro) from thier github repo.
 
+### Dataset Structure
+The dataset formats we use follow the BSD dataset format.
+
+```bash
+dataset/
+├── video1/
+│ ├── Blur/RGB/
+├── video2/
+│ ├── Blur/RGB/
+├── video3/
+│ ├── Blur/RGB/
+```
+
 ## Implementation
-The following section is our test-time adaptation method.
+The following section is our test-time adaptation method. We have divided our method into four parts for better maintenance and development.
 
 ### Step 1: Relative Sharpness Detection Module
-In our work, we first detect the relatively sharp patches from testing video. If you want to know more, you can refer to our paper or [RSDM](https://github.com/Jin-Ting-He/RSDM).
+In our work, we first detect the relatively sharp patches from testing video. Before running main.py, you need to modify lines 108 to 113 to include your data and model weights paths. If you want to know more, you can refer to our paper or [RSDM](https://github.com/Jin-Ting-He/RSDM).
 ```bash
 python RSDM/main.py
 ```
 
 ### Step 2: Domain-adaptive Blur Condition Generation Module
+This module aims to generate the domain-adaptive blur condition for testing video. Before running main.py, you need to modify lines 237 to 248 to include your data and model weights paths.
+
+```bash
+python DBCGM/main.py
+```
+
+### Step 3: Generate domain-specific training data
+This section utilize the ID-Blau and our domain-adaptive blur condition to generate new training data for fine-tuning deblurring model. If you want to know more, you can refer [ID-Blau](https://github.com/plusgood-steven/ID-Blau). Before running main.py, you need to modify lines 161 to 164 to include your data and model weights paths.
+
+```bash
+python BlurringModel/main.py
+```
+
