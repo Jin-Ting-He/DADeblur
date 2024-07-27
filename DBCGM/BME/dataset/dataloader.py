@@ -3,12 +3,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset
+from BOE.core.utils.utils import InputPadder
 import torchvision.transforms as transforms
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import random
 import cv2
+import json
 
 torch.manual_seed(3)
 
@@ -30,7 +32,7 @@ class RandomCrop(object):
         return data
 
 class Normalize(object):
-    def __init__(self, mag_norm, ZeroToOne=True):
+    def __init__(self, mag_norm=205, ZeroToOne=True):
         super(Normalize, self).__init__()
         self.ZeroToOne = ZeroToOne
         self.num = 0 if ZeroToOne else 0.5
@@ -71,6 +73,43 @@ class Resize(object):
     def __call__(self, data):
         data['blur_img'] = data['blur_img'].resize(self.size, resample=Image.BILINEAR).copy()
         return data
+    
+class BMEInferDataset(Dataset):
+    def __init__(self, dataset_root, json_path):
+        self.img_list = []
+        self.crop_region = []
+        # self.crop_size = 256
+        self.transform = transforms.Compose([Normalize(), ToTensor()])
+        with open(json_path, 'r') as file:
+            loaded_dict = json.load(file)
+
+            for region in loaded_dict['sharp_regions']:
+                
+                img_file = region['path'].split('/')[-1]
+                video_idx = region['path'].split('/')[-3]
+                crop_bbox = region['bbox']
+                
+                self.img_list.append(os.path.join(dataset_root, video_idx, "Blur/RGB", img_file))
+                self.crop_region.append(crop_bbox)
+
+    def __len__(self):
+        return len(self.img_list)
+    
+    def __getitem__(self, idx):
+        bbox = self.crop_region[idx]
+        blur_img = cv2.imread(self.img_list[idx])
+        blur_img = blur_img[bbox[0]:bbox[2], bbox[1]:bbox[3]].astype(np.float32)
+        sample = {
+                'blur_img': blur_img,
+            }
+        self.transform(sample)
+        file_name = self.img_list[idx].split('/')[-1]
+        video_name = self.img_list[idx].split('/')[-4]
+
+        padder = InputPadder(sample['blur_img'].shape)
+        sample['blur_img'] = padder.pad(sample['blur_img'])[0]
+        
+        return sample['blur_img'], video_name, file_name
 
 class BlurMagDataset(Dataset):
     def __init__(self,dataset_root,train=True):

@@ -485,8 +485,7 @@ class Video_BSD_json_Loader(Dataset):
         samples = list()
         with open(data_path, 'r') as file:
             loaded_dict = json.load(file)
-            # print("########## debug #############")
-            # print(loaded_dict['sharp_regions'][0])
+
             for region in loaded_dict['sharp_regions']:
                 
                 sharp_img_path = region['path']

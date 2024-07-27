@@ -126,6 +126,12 @@ class AFF(nn.Module):
         # x2 fusion
         x1_down = F.interpolate(x1, scale_factor=0.5)
         x3_up = F.interpolate(x3, scale_factor=2)
+        diffY = x3_up.size()[2] - x1_down.size()[2]
+        diffX = x3_up.size()[3] - x1_down.size()[3]
+        x1_down = F.pad(x1_down, [diffX // 2, diffX - diffX // 2,
+                        diffY // 2, diffY - diffY // 2])
+        x2 = F.pad(x2, [diffX // 2, diffX - diffX // 2,
+                        diffY // 2, diffY - diffY // 2])
         x2_out = self.conv2_out(self.conv2_1x1(torch.cat((x1_down, x2, x3_up),dim=1)))
 
         # x3 fusion

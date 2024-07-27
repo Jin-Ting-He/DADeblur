@@ -3,6 +3,7 @@ import os
 import torch
 import numpy as np
 import json
+import random
 from torch.utils.data import DataLoader
 from BME.dataset.dataloader import BlurMagDataset
 from BME.model.bme_model import MyNet_Res50_multiscale
@@ -71,11 +72,16 @@ class RSDM():
                             temp_list.append({"path": out_path_mag, "bbox": bbox})
 
             # Check the number of data
-            if abs(len(temp_list) - num_data) < 5:
+            if abs(len(temp_list) - num_data) < 3:
                 print(f"The Number of Sharp Regions: {len(temp_list)}")
                 self.output_dict['sharp_regions'].extend(temp_list)
                 break
             
+            if(mask_threshold < 1e-5):
+                print(f"Threshold is too small! Random get {num_data}")
+                self.output_dict['sharp_regions'].extend(random.sample(temp_list, num_data))
+                break
+
             if len(temp_list) > num_data:
                 upper_bound = mask_threshold
             else:
@@ -105,7 +111,7 @@ class RSDM():
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_dataset", default="BSD_2ms16ms", type=str)
+    parser.add_argument("--input_dataset", default="BSD_1ms8ms", type=str)
     parser.add_argument("--input_dataset_folder", default="4TB/jthe/datasets/", type=str)
     parser.add_argument("--output_json_folder", default="home/jthe/DADeblur/RSDM/output/json/", type=str)
     parser.add_argument("--output_mask_folder", default="home/jthe/DADeblur/RSDM/output/mask/", type=str)
