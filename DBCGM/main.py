@@ -222,9 +222,9 @@ class DBCGM(): # Domain-adaptive Blur Condition Generation Module
                     neighbor_avg_magnitude = (t_minus2_mask + t_minus1_mask + t_plus2_mask + t_plus1_mask)/4
                     cur_blur_mag = cur_blur_mag / np.max(cur_blur_mag)
                     new_blur_magnitude = cur_blur_mag*neighbor_avg_magnitude
-                    blur_condition[2] = new_blur_magnitude + 5
+                    blur_condition[2] = new_blur_magnitude
                 else:
-                    blur_condition[2] = cur_blur_mag.copy() + 5
+                    blur_condition[2] = cur_blur_mag.copy()
 
                 output_file_path = os.path.join(outptu_video_path, file)
                 np.save(output_file_path, blur_condition)

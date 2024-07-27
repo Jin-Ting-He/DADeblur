@@ -109,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_dataset_folder", default="4TB/jthe/datasets/", type=str)
     parser.add_argument("--output_json_folder", default="home/jthe/DADeblur/RSDM/output/json/", type=str)
     parser.add_argument("--output_mask_folder", default="home/jthe/DADeblur/RSDM/output/mask/", type=str)
-    parser.add_argument("--reblur_result_root", default="4TB/jthe/ID_Blau_results/multiscale_th06_mag5/norm_scale/", type=str)
+    parser.add_argument("--reblur_result_root", default="home/jthe/DADeblur/BlurringModel/blurring_output/", type=str)
     parser.add_argument("--bme_weight_path", default="home/jthe/BME/BME/weights/best_net.pth", type=str)
     parser.add_argument("--relative_sharpness_ratio", default=0.2, type=float) # the ratio of relative sharpness region from entire dataset
     args = parser.parse_args()

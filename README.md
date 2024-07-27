@@ -57,9 +57,39 @@ python DBCGM/main.py
 ```
 
 ### Step 3: Generate domain-specific training data
-This section utilize the ID-Blau and our domain-adaptive blur condition to generate new training data for fine-tuning deblurring model. If you want to know more, you can refer [ID-Blau](https://github.com/plusgood-steven/ID-Blau). Before running main.py, you need to modify lines 161 to 164 to include your data and model weights paths.
+This section utilize the [ID-Blau](https://github.com/plusgood-steven/ID-Blau) and our domain-adaptive blur condition to generate new training data for fine-tuning deblurring model. Before running main.py, you need to modify lines 161 to 164 to include your data and model weights paths.
 
 ```bash
 python BlurringModel/main.py
 ```
 
+### Step 4: Adapting and Testing the Deblurring Model
+Now, you can use the new training data from step 3 to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example.
+
+#### Adapting
+Before adapting this model, you need to modify line 225 to 229 in deblur_finetune_DDP.py to include your data and model weights path.
+
+```bash
+CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master_port=29500 DeblurringModel/ESTRNN/deblur_finetune_DDP.py
+```
+
+#### Testing
+Before testing the model adapted by our method, you need to modify line 149 to 154 in deblur_inference.py to include your data and model weights path.
+
+```bash
+python DeblurringModel/ESTRNN/deblur_inference.py
+```
+
+## Results
+We compare the deblurring performance of four video deblurring methods using five video deblurring datasets. "Baseline" indicates that the deblurring model is trained on the GoPro dataset and tested on a specific dataset. "+Ours" indicates that the deblurring model is adapted using our method. This table demonstrates that our method can significantly improve the performance of existing video deblurring models on various real-world datasets.
+![Results](assets/results.png)
+
+## Citation
+```
+@inproceedings{He2024DADeblur,
+  author    = {Jin-Ting He, Fu-Jen Tsai, Jia-Hao Wu, Yan-Tsung Peng, Chung-Chi Tsai, Chia-Wen Lin, Yen-Yu Lin},
+  title     = {Domain-adaptive-Video-Deblurring-via-Test-time-Reblurring},
+  booktitle = {ECCV},
+  year      = {2024}
+}
+```

@@ -4,4 +4,6 @@ output/
 json/
 mask/
 blurring_output/
+model_weight/
+ESTRNN_out/
 *.png

@@ -109,5 +109,5 @@ def get_sharp_region(input_path):
 
 def get_img_path(input_path, video_idx, reblur_result_root, dataset_name):
     img_name = input_path.split('/')[-1]
-    out_path = os.path.join(reblur_result_root, dataset_name, video_idx, "ori", img_name)
+    out_path = os.path.join(reblur_result_root, dataset_name, "test" ,video_idx, "ori", img_name)
     return out_path
