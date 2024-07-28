@@ -512,14 +512,14 @@ class Video_BSD_json_Loader(Dataset):
 
     def __getitem__(self, idx):
         bbox = self.crop_region[idx]
-        sharp = cv2.imread(self.sharp_list[idx].replace("blurring_output","blurring_output_small/MagAdding20"))
+        sharp = cv2.imread(self.sharp_list[idx])
         # sharp = cv2.imread(self.sharp_list[idx].replace("ssddisk","4TB").replace("ID_Blau_results/multiscale_th06_mag5/norm_scale/BSD_1ms8ms","datasets/BSD_1ms8ms/test").replace("ori","Sharp/RGB"))
         sharp = sharp[bbox[0]:bbox[2], bbox[1]:bbox[3]].astype(np.float32)
         # sharp = cv2.resize(sharp, (self.resizeW, self.resizeH))
         sharp = cv2.cvtColor(sharp, cv2.COLOR_BGR2RGB)
         blurs = []
         for blur_path in self.blur_list[idx]:
-            blur = cv2.imread(blur_path.replace("blurring_output","blurring_output_small/MagAdding20"))
+            blur = cv2.imread(blur_path) # .replace("blurring_output","blurring_output_small/MagAdding20")
             # blur = cv2.imread(blur_path.replace("ssddisk","4TB").replace("ID_Blau_results/multiscale_th06_mag5/norm_scale/BSD_1ms8ms","datasets/BSD_1ms8ms/test").replace("reblur","Blur/RGB").replace("ori","Blur/RGB"))
             blur = blur[bbox[0]:bbox[2], bbox[1]:bbox[3]].astype(np.float32)
             # blur = cv2.resize(blur, (self.resizeW, self.resizeH))

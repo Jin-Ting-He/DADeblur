@@ -204,7 +204,7 @@ if __name__ == "__main__":
     parser.add_argument("--input_folder_path", default='4TB/jthe/datasets/BSD_2ms16ms/test/', type=str)
     parser.add_argument("--rsdm_results", default='home/jthe/DADeblur/RSDM/output/json/BSD_2ms16ms.json', type=str)
     parser.add_argument("--blur_condition_folder_path", default="home/jthe/DADeblur/DBCGM/output/BSD_2ms16ms/test/", type=str)
-    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output_small/BSD_2ms16ms/test/", type=str)
+    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output/BSD_2ms16ms/test/", type=str)
     parser.add_argument("--model", default='DDIM', type=str)
     parser.add_argument("--sample_timesteps", default=20, type=int)
     parser.add_argument("--seed", default=2023, type=int)
