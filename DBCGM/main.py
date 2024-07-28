@@ -220,11 +220,12 @@ class DBCGM(): # Domain-adaptive Blur Condition Generation Module
                     t_plus1_path = os.path.join(self.magnitude_folder,video, file_list[i+1])
                     t_plus1_mask = np.load(t_plus1_path)
                     neighbor_avg_magnitude = (t_minus2_mask + t_minus1_mask + t_plus2_mask + t_plus1_mask)/4
+                    # cur_blur_mag = cur_blur_mag + 10 # new
                     cur_blur_mag = cur_blur_mag / np.max(cur_blur_mag)
                     new_blur_magnitude = cur_blur_mag*neighbor_avg_magnitude
-                    blur_condition[2] = new_blur_magnitude + 15
+                    blur_condition[2] = new_blur_magnitude + 10
                 else:
-                    blur_condition[2] = cur_blur_mag.copy() + 15
+                    blur_condition[2] = cur_blur_mag.copy() + 10
 
                 output_file_path = os.path.join(outptu_video_path, file)
                 np.save(output_file_path, blur_condition)
@@ -249,12 +250,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # blur magnitude estimation
-    bme = BME(args)
-    bme.inference()
+    # bme = BME(args)
+    # bme.inference()
 
-    # blur orientation estimation
-    boe = BOE(args)
-    boe.infernece()
+    # # blur orientation estimation
+    # boe = BOE(args)
+    # boe.infernece()
 
     # domain-adaptive blur condition generation
     dbcgm = DBCGM(args)

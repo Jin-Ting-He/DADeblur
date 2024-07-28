@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 # 將父目錄的路徑添加到 sys.path 中
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
-from video_dataloader import Video_GoPro_Loader, Video_BSD_Loader, Video_BSD_all_valid_Loader, Video_RealBlur_all_valid_Loader
+from video_dataloader import Video_BSD_all_valid_Loader
 from model import ESTRNN
 from utils import calc_psnr, same_seed, count_parameters, tensor2cv, AverageMeter, judge_and_remove_module_dict
 import pyiqa
@@ -111,10 +111,10 @@ def valid(model, args, device, title=None):
 
             tq.set_postfix(PSNR=total_val_psnr.avg, SSIM=total_val_ssim.avg)
 
-            new_row = pd.DataFrame({'Dataset': [val_dataset_name], 'Video': [sample['video'][0]],
-                                    'Image': [sample['name'][0]], 'PSNR': [psnr], 'SSIM': [ssim], 
-                                    'Baseline':[args.baseline], 'ID-Blau':['None']})
-            results_per_frame = pd.concat([results_per_frame, new_row], ignore_index=True)
+            # new_row = pd.DataFrame({'Dataset': [val_dataset_name], 'Video': [sample['video'][0]],
+            #                         'Image': [sample['name'][0]], 'PSNR': [psnr], 'SSIM': [ssim], 
+            #                         'Baseline':[args.baseline], 'ID-Blau':['None']})
+            # results_per_frame = pd.concat([results_per_frame, new_row], ignore_index=True)
 
             total_psnr_per_video += psnr
             count_per_video += 1
@@ -137,21 +137,21 @@ def valid(model, args, device, title=None):
         logging.info(f"Dataset : {val_dataset_name}")
         logging.info(f"The program's running time is (h:m:s) : {time_str}")
         logging.info(f"PSNR : {total_val_psnr.avg:.4f}, SSIM : {total_val_ssim.avg:.4f}\n")
-    results_file = os.path.join(args.dir_path, 'validation_results_per_frame.csv')
-    results_per_frame.to_csv(results_file, index=False)
-    results_file = os.path.join(args.dir_path, 'validation_results_per_video.csv')
-    results_per_video.to_csv(results_file, index=False)
+    # results_file = os.path.join(args.dir_path, 'validation_results_per_frame.csv')
+    # results_per_frame.to_csv(results_file, index=False)
+    # results_file = os.path.join(args.dir_path, 'validation_results_per_video.csv')
+    # results_per_video.to_csv(results_file, index=False)
 
 if __name__ == "__main__":
     # hyperparameters
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", default=1, type=int)
-    parser.add_argument("--data_path", default='4TB/jthe/datasets', type=str)
-    parser.add_argument("--baseline", default='2ms16ms', type=str)
-    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/ESTRNN_out/BSD_2ms16ms', type=str) ### Need change
-    parser.add_argument("--model_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms/best_BSD_2ms16ms.pth', type=str)
+    parser.add_argument("--data_path", default='disk2/jthe/datasets', type=str)
+    parser.add_argument("--baseline", default='3ms24ms', type=str)
+    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/ESTRNN_out/BSD_3ms24ms', type=str) ### Need change
+    parser.add_argument("--model_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_3ms24ms/best_BSD_3ms24ms.pth', type=str)
     parser.add_argument("--title", default='None', type=str)
-    parser.add_argument("--dataset", default='BSD_2ms16ms', type=str, choices=['GOPRO_Large']) ### Need change
+    parser.add_argument("--dataset", default='BSD_3ms24ms', type=str, choices=['GOPRO_Large']) ### Need change
     parser.add_argument("--crop_size", default=None, type=int)
     # model parameters
     parser.add_argument("--model", default='ESTRNN', type=str, choices=['ESTRNN'])
