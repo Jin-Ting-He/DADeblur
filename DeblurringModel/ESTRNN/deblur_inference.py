@@ -148,8 +148,8 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", default=1, type=int)
     parser.add_argument("--data_path", default='4TB/jthe/datasets', type=str)
     parser.add_argument("--baseline", default='2ms16ms', type=str)
-    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/ESTRNN_out/BSD_2ms16ms_test', type=str) ### Need change
-    parser.add_argument("--model_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms_test/best_BSD_2ms16ms_test.pth', type=str)
+    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/ESTRNN_out/BSD_2ms16ms', type=str) ### Need change
+    parser.add_argument("--model_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms/best_BSD_2ms16ms.pth', type=str)
     parser.add_argument("--title", default='None', type=str)
     parser.add_argument("--dataset", default='BSD_2ms16ms', type=str, choices=['GOPRO_Large']) ### Need change
     parser.add_argument("--crop_size", default=None, type=int)

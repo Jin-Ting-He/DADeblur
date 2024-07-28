@@ -224,8 +224,8 @@ if __name__ == "__main__":
     parser.add_argument("--criterion", default='l2', type=str)
     parser.add_argument("--data_path", default='home/jthe/DADeblur/RSDM/output/json/BSD_2ms16ms.json', type= str) 
     parser.add_argument("--valid_data_path", default='4TB/jthe/datasets/BSD_2ms16ms', type= str) 
-    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms_test', type=str) 
-    parser.add_argument("--model_name", default='BSD_2ms16ms_test', type=str) 
+    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms', type=str) 
+    parser.add_argument("--model_name", default='BSD_2ms16ms', type=str) 
     parser.add_argument("--resume", default="home/jthe/Deblur_Domain_Adaptation/ESTRNN/ESTRNN_experiments/ESTRNN_baseline/GOPRO/best_ESTRNN_baseline.pth", type=str)
     # model parameters
     parser.add_argument("--model", default='ESTRNN', type=str, choices=['ESTRNN'])

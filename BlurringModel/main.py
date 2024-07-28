@@ -6,6 +6,7 @@ import argparse
 import torch
 import cv2
 import numpy as np
+import json
 from torchvision import transforms 
 from ID_Blau.flow_viz import flow_to_image
 from ID_Blau.utils import same_seed, count_parameters, tensor2cv, AverageMeter, judge_and_remove_module_dict
@@ -72,6 +73,47 @@ class BlurringModel():
             for image in image_path_list:
                 self.dataset_len+=1
 
+    def generate_new_training_data_rs(self):
+        self.img_list = []
+        with open(self.args.rsdm_results, 'r') as file:
+            loaded_dict = json.load(file)
+            for region in loaded_dict['sharp_regions']:
+                
+                img_file = region['path'].split('/')[-1]
+                video_idx = region['path'].split('/')[-3]
+                
+                self.img_list.append(os.path.join(self.args.input_folder_path, video_idx, "Blur/RGB", img_file))
+        c = 1
+        for image in self.img_list:
+            print(f'{c} / {len(self.img_list)}')
+            c += 1
+            image_name = image.split('/')[-1]
+            video_idx = image.split('/')[-4]
+            cur_video_flow_folder = self.args.blur_condition_folder_path + video_idx
+            flow_name = image_name.replace('.png','.npy')
+            flow = cur_video_flow_folder+'/'+flow_name
+
+            output_video_folder = self.args.output_folder_path + video_idx
+            os.makedirs(output_video_folder, exist_ok=True)
+            output_ori_frames_folder = os.path.join(output_video_folder, "ori")
+            os.makedirs(output_ori_frames_folder, exist_ok=True)
+            output_reblur_frames_folder = os.path.join(output_video_folder, "reblur")
+            os.makedirs(output_reblur_frames_folder, exist_ok=True)
+            output_flow_folder = os.path.join(output_video_folder,"flow")
+            os.makedirs(output_flow_folder, exist_ok=True)
+
+            if os.path.exists(flow) and os.path.exists(image):
+                flow, reblur_image = self.blurring(image, flow, sample_timesteps=self.args.sample_timesteps)
+
+                ori_image = cv2.imread(image)
+
+                ori_img_path = os.path.join(output_ori_frames_folder,image_name)
+                cv2.imwrite(ori_img_path, ori_image)
+                reblur_img_path = os.path.join(output_reblur_frames_folder,image_name)
+                cv2.imwrite(reblur_img_path, reblur_image)
+                flow_img_path = os.path.join(output_flow_folder,image_name)
+                cv2.imwrite(flow_img_path, flow)
+
     def generate_new_training_data(self):
         self.get_dataset_len()
         for dir in self.dir_list:
@@ -122,7 +164,7 @@ class BlurringModel():
 
             # magnitude_max=np.max(flow[2])
 
-            flow[2] = flow[2]/150
+            flow[2] = flow[2]/205
             flow[2][flow[2]>1] = 1
             flow = flow.transpose((1, 2, 0))
 
@@ -159,9 +201,10 @@ class BlurringModel():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", default="home/jthe/Deblur_Domain_Adaptation/data_generator/data_reblur/model_weights/epoch_5000_diffusion_flow_reblur.pth", type=str)
-    parser.add_argument("--input_folder_path", default='4TB/jthe/datasets/BSD_3ms24ms/test/', type=str)
-    parser.add_argument("--blur_condition_folder_path", default="home/jthe/DADeblur/DBCGM/output/BSD_3ms24ms/test/", type=str)
-    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output/BSD_3ms24ms/test/", type=str)
+    parser.add_argument("--input_folder_path", default='4TB/jthe/datasets/BSD_2ms16ms/test/', type=str)
+    parser.add_argument("--rsdm_results", default='home/jthe/DADeblur/RSDM/output/json/BSD_2ms16ms.json', type=str)
+    parser.add_argument("--blur_condition_folder_path", default="home/jthe/DADeblur/DBCGM/output/BSD_2ms16ms/test/", type=str)
+    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output_small/BSD_2ms16ms/test/", type=str)
     parser.add_argument("--model", default='DDIM', type=str)
     parser.add_argument("--sample_timesteps", default=20, type=int)
     parser.add_argument("--seed", default=2023, type=int)
@@ -169,4 +212,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     blurring_model = BlurringModel(args)
-    blurring_model.generate_new_training_data()
+    blurring_model.generate_new_training_data_rs()
