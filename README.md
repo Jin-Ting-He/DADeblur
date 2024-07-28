@@ -12,6 +12,12 @@ Jin-Ting He, Fu-Jen Tsai, Jia-Hao Wu, Yan-Tsung Peng, Chung-Chi Tsai, Chia-Wen L
 ![Pipeline](assets/pipeline.png)
 
 ## Installation
+```
+conda create -n IDBlau python=3.9
+conda activate IDBlau
+conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
+pip install opencv-python tqdm tensorboardX pyiqa thop numpy pandas
+```
 
 ## Preparation
 
