@@ -64,10 +64,10 @@ python BlurringModel/main.py
 ```
 
 ### Step 4: Adapting and Testing the Deblurring Model
-Now, you can use the new training data from step 3 to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example.
+Now, you can use the result from our RSDM and the new training data from ID-Blau to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example.
 
 #### Adapting
-Before adapting this model, you need to modify line 225 to 229 in deblur_finetune_DDP.py to include your data and model weights path.
+Before adapting this model, you need to modify line 225 to 229 in ```deblur_finetune_DDP.py``` to include your data and model weights path.
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master_port=29500 DeblurringModel/ESTRNN/deblur_finetune_DDP.py
