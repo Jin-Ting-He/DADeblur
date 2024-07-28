@@ -44,27 +44,27 @@ dataset/
 The following section is our test-time adaptation method. We have divided our method into four parts for better maintenance and development.
 
 ### Step 1: Relative Sharpness Detection Module
-In our work, we first detect the relatively sharp patches from testing video. Before running main.py, you need to modify lines 108 to 113 to include your data and model weights paths. If you want to know more, you can refer to our paper or [RSDM](https://github.com/Jin-Ting-He/RSDM).
+In our work, we first detect the relatively sharp patches from testing video. Before running ```RSDM/main.py```, you need to modify lines 108 to 113 to include your data and model weights paths. If you want to know more, you can refer to our paper or [RSDM](https://github.com/Jin-Ting-He/RSDM).
 ```bash
 python RSDM/main.py
 ```
 
 ### Step 2: Domain-adaptive Blur Condition Generation Module
-This module aims to generate the domain-adaptive blur condition for testing video. Before running main.py, you need to modify lines 237 to 248 to include your data and model weights paths.
+This module aims to generate the domain-adaptive blur condition for testing video. Before running ```DBCGM/main.py```, you need to modify lines 237 to 248 to include your data and model weights paths.
 
 ```bash
 python DBCGM/main.py
 ```
 
 ### Step 3: Generate domain-specific training data
-This section utilize the [ID-Blau](https://github.com/plusgood-steven/ID-Blau) and our domain-adaptive blur condition to generate new training data for fine-tuning deblurring model. Before running main.py, you need to modify lines 161 to 164 to include your data and model weights paths.
+This section utilize the [ID-Blau](https://github.com/plusgood-steven/ID-Blau) and our domain-adaptive blur condition to generate new training data for fine-tuning deblurring model. Before running ```BlurringModel/main.py```, you need to modify lines 161 to 164 to include your data and model weights paths.
 
 ```bash
 python BlurringModel/main.py
 ```
 
 ### Step 4: Adapting and Testing the Deblurring Model
-Now, you can use the result from our RSDM and the new training data from ID-Blau to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example.
+Now, you can use the result from our RSDM and the new training data from ID-Blau to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example. (If you want to utilize our method to adapt your own vide blurring model, you can refer our dataloader in ESTRNN.)
 
 #### Adapting
 Before adapting this model, you need to modify line 225 to 229 in ```deblur_finetune_DDP.py``` to include your data and model weights path.
@@ -74,7 +74,7 @@ CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master_port=29500 Deblurr
 ```
 
 #### Testing
-Before testing the model adapted by our method, you need to modify line 149 to 154 in deblur_inference.py to include your data and model weights path.
+Before testing the model adapted by our method, you need to modify line 149 to 154 in ```deblur_inference.py``` to include your data and model weights path.
 
 ```bash
 python DeblurringModel/ESTRNN/deblur_inference.py

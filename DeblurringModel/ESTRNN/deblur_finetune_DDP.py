@@ -16,7 +16,7 @@ import torch.distributed as dist
 # 將父目錄的路徑添加到 sys.path 中
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
-from video_dataloader import Video_GoPro_Loader, Video_BSD_Loader, Video_BSD_json_Loader, Video_BSD_all_valid_Loader, Video_RealBlur_all_valid_Loader, Video_RealBlur_json_Loader
+from video_dataloader import Video_BSD_json_Loader, Video_BSD_all_valid_Loader
 from model import ESTRNN
 from utils import calc_psnr, same_seed, count_parameters, tensor2cv, AverageMeter, judge_and_remove_module_dict
 import torch.nn.functional as F
