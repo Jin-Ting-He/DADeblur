@@ -112,7 +112,7 @@ class RSDM():
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_dataset", default="BSD_1ms8ms", type=str)
+    parser.add_argument("--input_dataset", default="BSD_2ms16ms", type=str)
     parser.add_argument("--input_dataset_folder", default="disk2/jthe/datasets/", type=str)
     parser.add_argument("--output_json_folder", default="home/jthe/DADeblur/RSDM/output/json/", type=str)
     parser.add_argument("--output_mask_folder", default="home/jthe/DADeblur/RSDM/output/mask/", type=str)

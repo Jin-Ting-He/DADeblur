@@ -22,7 +22,7 @@ pip install opencv-python tqdm tensorboardX pyiqa thop numpy pandas
 ## Preparation
 
 ### Training dataset
-In our work, we train the ID-Blau, BME and Video Deblurring Model on [GoPro][https://seungjunnah.github.io/Datasets/gopro.html] dataset.
+In our work, we train the ID-Blau, BME and Video Deblurring Model on [GoPro](https://seungjunnah.github.io/Datasets/gopro.html) dataset.
 
 ### Testing dataset
 We test the following real-world dataset to validate our test-time adaptation method.
