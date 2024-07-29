@@ -1,4 +1,4 @@
-# Domain-adaptive-Video-Deblurring-via-Test-time-Reblurring(ECCV 2024)
+# Domain-adaptive Video Deblurring via Test-time Blurring(ECCV 2024)
 Jin-Ting He, Fu-Jen Tsai, Jia-Hao Wu, Yan-Tsung Peng, Chung-Chi Tsai, Chia-Wen Lin, Yen-Yu Lin
 
 [![paper](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2407.09059)
