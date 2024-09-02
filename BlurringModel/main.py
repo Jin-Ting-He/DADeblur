@@ -117,9 +117,8 @@ class BlurringModel():
     def generate_new_training_data(self):
         self.get_dataset_len()
         for dir in self.dir_list:
-            cur_video_frames_folder = dir+ "/Sharp/RGB"
+            cur_video_frames_folder = dir+ "/Blur/RGB"
             video_idx = dir.split('/')[-1]
-            if video_idx != '107': continue
             cur_video_flow_folder = self.args.blur_condition_folder_path + video_idx
             output_video_folder = self.args.output_folder_path + video_idx
             os.makedirs(output_video_folder, exist_ok=True)
@@ -165,7 +164,7 @@ class BlurringModel():
 
             # magnitude_max=np.max(flow[2])
 
-            flow[2] = (flow[2]+10)/205
+            flow[2] = flow[2]/205
             flow[2][flow[2]>1] = 1
             flow = flow.transpose((1, 2, 0))
 
@@ -202,10 +201,10 @@ class BlurringModel():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", default="home/jthe/Deblur_Domain_Adaptation/data_generator/data_reblur/model_weights/epoch_5000_diffusion_flow_reblur.pth", type=str)
-    parser.add_argument("--input_folder_path", default='disk2/jthe/datasets/BSD_2ms16ms/test/', type=str)
+    parser.add_argument("--input_folder_path", default='4TB/jthe/datasets/BSD_2ms16ms/test/', type=str)
     parser.add_argument("--rsdm_results", default='home/jthe/DADeblur/RSDM/output/json/BSD_2ms16ms.json', type=str)
     parser.add_argument("--blur_condition_folder_path", default="home/jthe/DADeblur/DBCGM/output/BSD_2ms16ms/test/", type=str)
-    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output/BSD_2ms16ms_sharp/test/", type=str)
+    parser.add_argument("--output_folder_path", default="home/jthe/DADeblur/BlurringModel/blurring_output/BSD_2ms16ms/test/", type=str)
     parser.add_argument("--model", default='DDIM', type=str)
     parser.add_argument("--sample_timesteps", default=20, type=int)
     parser.add_argument("--seed", default=2023, type=int)
@@ -213,5 +212,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     blurring_model = BlurringModel(args)
-    # blurring_model.generate_new_training_data_rs()
-    blurring_model.generate_new_training_data()
+    blurring_model.generate_new_training_data_rs()
