@@ -7,4 +7,5 @@ blurring_output/
 blurring_output_small/
 model_weight/
 ESTRNN_out/
+exp_output/
 *.png
