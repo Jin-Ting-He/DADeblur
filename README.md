@@ -70,7 +70,7 @@ python BlurringModel/main.py
 ```
 
 ### Step 4: Adapting and Testing the Deblurring Model
-Now, you can use the result from our RSDM and the new training data from ID-Blau to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example. (If you want to utilize our method to adapt your own vide blurring model, you can refer our dataloader in ESTRNN.)
+Now, you can use the result from our RSDM and the new training data from ID-Blau to fine-tune your video deblurring model. In this section, I take [ESTRNN](https://github.com/zzh-tech/ESTRNN) as a example. You can download the GoPro pretrained weight of ESTRNN from [weight](https://drive.google.com/file/d/1EkK0s8b-9FDua6RF2QSN_0Lo2-qkv1ob/view?usp=sharing). (If you want to utilize our method to adapt your own vide blurring model, you can refer our dataloader in ESTRNN.)
 
 #### Adapting
 Before adapting this model, you need to modify line 225 to 229 in ```deblur_finetune_DDP.py``` to include your data and model weights path.
