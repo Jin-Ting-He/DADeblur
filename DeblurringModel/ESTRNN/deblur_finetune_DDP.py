@@ -16,7 +16,7 @@ import torch.distributed as dist
 # 將父目錄的路徑添加到 sys.path 中
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
-from video_dataloader import Video_GoPro_Loader, Video_BSD_Loader, Video_BSD_json_Loader, Video_BSD_all_valid_Loader, Video_RealBlur_all_valid_Loader, Video_RealBlur_json_Loader
+from video_dataloader import Video_BSD_json_Loader, Video_BSD_all_valid_Loader
 from model import ESTRNN
 from utils import calc_psnr, same_seed, count_parameters, tensor2cv, AverageMeter, judge_and_remove_module_dict
 import torch.nn.functional as F
@@ -222,10 +222,10 @@ if __name__ == "__main__":
     parser.add_argument("--gamma", default=0.5, type=float)
     parser.add_argument("--optimizer", default='adam', type=str)
     parser.add_argument("--criterion", default='l2', type=str)
-    parser.add_argument("--data_path", default='home/jthe/DADeblur/RSDM/output/json/BSD_2ms16ms.json', type= str) 
-    parser.add_argument("--valid_data_path", default='4TB/jthe/datasets/BSD_2ms16ms', type= str) 
-    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_2ms16ms', type=str) 
-    parser.add_argument("--model_name", default='BSD_2ms16ms', type=str) 
+    parser.add_argument("--data_path", default='home/jthe/DADeblur/RSDM/output/json/BSD_3ms24ms.json', type= str) 
+    parser.add_argument("--valid_data_path", default='disk2/jthe/datasets/BSD_3ms24ms', type= str) 
+    parser.add_argument("--dir_path", default='home/jthe/DADeblur/DeblurringModel/ESTRNN/model_weight/BSD_3ms24ms', type=str) 
+    parser.add_argument("--model_name", default='BSD_3ms24ms', type=str) 
     parser.add_argument("--resume", default="home/jthe/Deblur_Domain_Adaptation/ESTRNN/ESTRNN_experiments/ESTRNN_baseline/GOPRO/best_ESTRNN_baseline.pth", type=str)
     # model parameters
     parser.add_argument("--model", default='ESTRNN', type=str, choices=['ESTRNN'])

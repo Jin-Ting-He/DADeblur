@@ -33,6 +33,7 @@ class RSDM():
     def run(self):
         video_list = os.listdir(self.input_path)
         for video_c, video in enumerate(video_list, start=1):
+            if(video == '.DS_Store'): continue
             print(f"{video_c} / {len(video_list)}")
             self.run_per_video(video)
         # store the json
@@ -111,8 +112,8 @@ class RSDM():
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_dataset", default="BSD_1ms8ms", type=str)
-    parser.add_argument("--input_dataset_folder", default="4TB/jthe/datasets/", type=str)
+    parser.add_argument("--input_dataset", default="BSD_2ms16ms", type=str)
+    parser.add_argument("--input_dataset_folder", default="disk2/jthe/datasets/", type=str)
     parser.add_argument("--output_json_folder", default="home/jthe/DADeblur/RSDM/output/json/", type=str)
     parser.add_argument("--output_mask_folder", default="home/jthe/DADeblur/RSDM/output/mask/", type=str)
     parser.add_argument("--reblur_result_root", default="home/jthe/DADeblur/BlurringModel/blurring_output/", type=str)

@@ -222,9 +222,9 @@ class DBCGM(): # Domain-adaptive Blur Condition Generation Module
                     neighbor_avg_magnitude = (t_minus2_mask + t_minus1_mask + t_plus2_mask + t_plus1_mask)/4
                     cur_blur_mag = cur_blur_mag / np.max(cur_blur_mag)
                     new_blur_magnitude = cur_blur_mag*neighbor_avg_magnitude
-                    blur_condition[2] = new_blur_magnitude + 15
+                    blur_condition[2] = new_blur_magnitude + 10
                 else:
-                    blur_condition[2] = cur_blur_mag.copy() + 15
+                    blur_condition[2] = cur_blur_mag.copy() + 10
 
                 output_file_path = os.path.join(outptu_video_path, file)
                 np.save(output_file_path, blur_condition)
@@ -235,26 +235,26 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # argument for BME
     parser.add_argument("--bme_weight_path", default="home/jthe/BME/BME/weights/best_net.pth", type=str)
-    parser.add_argument("--infer_dataset_path", default="4TB/jthe/datasets/BSD_2ms16ms/test", type=str)
-    parser.add_argument("--bme_output_path", default="home/jthe/DADeblur/DBCGM/BME/output/BSD_2ms16ms/test", type=str)
+    parser.add_argument("--infer_dataset_path", default="disk2/jthe/datasets/BSD_3ms24ms/test", type=str)
+    parser.add_argument("--bme_output_path", default="home/jthe/DADeblur/DBCGM/BME/output/BSD_3ms24ms/test", type=str)
     # argument for BOE
     parser.add_argument("--boe_weight_path", default="home/jthe/Deblur_Domain_Adaptation/data_generator/blur_orientation_estimator/weights/raft-things.pth", type=str)
-    parser.add_argument("--boe_output_path", default="home/jthe/DADeblur/DBCGM/BOE/output/BSD_2ms16ms/test", type=str)
+    parser.add_argument("--boe_output_path", default="home/jthe/DADeblur/DBCGM/BOE/output/BSD_3ms24ms/test", type=str)
     parser.add_argument('--epochs',default=20, help="iter times")
     parser.add_argument('--small', action='store_true', help='use small model')
     parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     # argument for DBCGM
-    parser.add_argument("--dbcgm_output_path", default="home/jthe/DADeblur/DBCGM/output/BSD_2ms16ms/test", type=str)
+    parser.add_argument("--dbcgm_output_path", default="home/jthe/DADeblur/DBCGM/output/BSD_3ms24ms/test", type=str)
     args = parser.parse_args()
 
     # blur magnitude estimation
-    # bme = BME(args)
-    # bme.inference()
+    bme = BME(args)
+    bme.inference()
 
-    # # blur orientation estimation
-    # boe = BOE(args)
-    # boe.infernece()
+    # blur orientation estimation
+    boe = BOE(args)
+    boe.infernece()
 
     # domain-adaptive blur condition generation
     dbcgm = DBCGM(args)
