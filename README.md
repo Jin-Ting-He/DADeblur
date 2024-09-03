@@ -94,7 +94,7 @@ We compare the deblurring performance of four video deblurring methods using fiv
 ```
 @inproceedings{He2024DADeblur,
   author    = {Jin-Ting He, Fu-Jen Tsai, Jia-Hao Wu, Yan-Tsung Peng, Chung-Chi Tsai, Chia-Wen Lin, Yen-Yu Lin},
-  title     = {Domain-adaptive-Video-Deblurring-via-Test-time-Reblurring},
+  title     = {Domain-adaptive-Video-Deblurring-via-Test-time-Blurring},
   booktitle = {ECCV},
   year      = {2024}
 }
