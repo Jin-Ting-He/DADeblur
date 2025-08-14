@@ -78,6 +78,8 @@ Before adapting this model, you need to modify line 225 to 229 in ```deblur_fine
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 --master_port=29500 DeblurringModel/ESTRNN/deblur_finetune_DDP.py
 ```
+#### Model weights after adapting via DADeblur
+[model weights](https://drive.google.com/drive/folders/1A-LlyixTNbAfSGNPZWhbfu90vgewTQr_?usp=sharing)
 
 #### Testing
 Before testing the model adapted by our method, you need to modify line 149 to 154 in ```deblur_inference.py``` to include your data and model weights path.
